@@ -20,6 +20,7 @@
       const message = data['message'];
       // Handle incoming message
       uzenetek.push(message)
+      uzenetek = uzenetek
   };
 
   chatSocket.onclose = function(e) {
@@ -57,3 +58,4 @@
 </div>
 
 <input type="text" placeholder="irj vmit" bind:value={text_v}>
+<button on:click={() => sendMessage(text_v)}>kuld</button>
