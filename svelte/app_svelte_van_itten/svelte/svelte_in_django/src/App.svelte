@@ -10,6 +10,28 @@
   export let url = ""
 
   let text_v = ""
+
+  export let uzenetek:string[] = []
+
+  const chatSocket = new WebSocket('ws://127.0.0.1:8000/ws/uzenetek/');
+
+  chatSocket.onmessage = function(e) {
+      const data = JSON.parse(e.data);
+      const message = data['message'];
+      // Handle incoming message
+      uzenetek.push(message)
+  };
+
+  chatSocket.onclose = function(e) {
+      console.error('Chat socket closed unexpectedly'); // fun
+  };
+
+  // Send message to server
+  function sendMessage(message) {
+      chatSocket.send(JSON.stringify({
+          'message': message
+      }));
+  }
 </script>
 
 <Router {url}>
@@ -24,5 +46,14 @@
     <Route path="/harmadik/:id" let:params><Harmadik text_v={params.id} /></Route>
   </div>
 </Router>
+
+<div>
+  realtime
+  <ol>
+    {#each uzenetek as li}
+      <li>{li}</li>
+    {/each}
+  </ol>
+</div>
 
 <input type="text" placeholder="irj vmit" bind:value={text_v}>
